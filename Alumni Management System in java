@@ -1,0 +1,220 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+
+public class AlumniManagementSystem extends Frame {
+
+    private List<Alumni> alumniList = new ArrayList<>();
+    private List<Event> eventList = new ArrayList<>();
+    private List<JobOpportunity> jobOpportunities = new ArrayList<>();
+
+    public AlumniManagementSystem() {
+        setLayout(new GridLayout(6, 1, 5, 5)); // Align options centrally in a grid
+        setBackground(Color.BLACK);
+
+        // Buttons for modules
+        Button addAlumniButton = createButton("Add Alumni");
+        Button displayAlumniButton = createButton("Display Alumni");
+        Button searchAnalyticsButton = createButton("Search and Analytics");
+        Button addEventButton = createButton("Add Event");
+        Button displayEventsButton = createButton("Display Events");
+        Button addJobOpportunityButton = createButton("Add Job Opportunity");
+        Button displayJobsButton = createButton("Display Job Opportunities");
+        Button exitButton = createButton("Exit");
+
+        // Adding buttons to the frame
+        add(addAlumniButton);
+        add(displayAlumniButton);
+        add(searchAnalyticsButton);
+        add(addEventButton);
+        add(displayEventsButton);
+        add(addJobOpportunityButton);
+        add(displayJobsButton);
+        add(exitButton);
+
+        // Button listeners
+        addAlumniButton.addActionListener(e -> addAlumni());
+        displayAlumniButton.addActionListener(e -> displayAlumni());
+        searchAnalyticsButton.addActionListener(e -> searchAndAnalytics());
+        addEventButton.addActionListener(e -> addEvent());
+        displayEventsButton.addActionListener(e -> displayEvents());
+        addJobOpportunityButton.addActionListener(e -> addJobOpportunity());
+        displayJobsButton.addActionListener(e -> displayJobOpportunities());
+        exitButton.addActionListener(e -> System.exit(0));
+
+        setTitle("Alumni Management System");
+        setSize(500, 500);
+        setVisible(true);
+
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
+    private Button createButton(String label) {
+        Button button = new Button(label);
+        button.setBackground(Color.GRAY);
+        button.setForeground(Color.BLACK);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        return button;
+    }
+
+    // Alumni Management Module
+    private void addAlumni() {
+        String name = prompt("Enter Alumni Name:");
+        int year = Integer.parseInt(prompt("Enter Graduation Year:"));
+        String contact = prompt("Enter Contact Number:");
+        String profession = prompt("Enter Profession:");
+        alumniList.add(new Alumni(name, year, contact, profession));
+        showMessage("Alumni added successfully.");
+    }
+
+    private void displayAlumni() {
+        if (alumniList.isEmpty()) {
+            showMessage("No Alumni found.");
+        } else {
+            StringBuilder sb = new StringBuilder("Alumni List:\n");
+            for (Alumni alumni : alumniList) {
+                sb.append(alumni).append("\n");
+            }
+            showMessage(sb.toString());
+        }
+    }
+
+    // Event Management Module
+    private void addEvent() {
+        String name = prompt("Enter Event Name:");
+        String date = prompt("Enter Event Date:");
+        String description = prompt("Enter Event Description:");
+        eventList.add(new Event(name, date, description));
+        showMessage("Event added successfully.");
+    }
+
+    private void displayEvents() {
+        if (eventList.isEmpty()) {
+            showMessage("No Events found.");
+        } else {
+            StringBuilder sb = new StringBuilder("Event List:\n");
+            for (Event event : eventList) {
+                sb.append(event).append("\n");
+            }
+            showMessage(sb.toString());
+        }
+    }
+
+    // Job Opportunity Module
+    private void addJobOpportunity() {
+        String title = prompt("Enter Job Title:");
+        String company = prompt("Enter Company Name:");
+        String location = prompt("Enter Job Location:");
+        String description = prompt("Enter Job Description:");
+        jobOpportunities.add(new JobOpportunity(title, company, location, description));
+        showMessage("Job Opportunity added successfully.");
+    }
+
+    private void displayJobOpportunities() {
+        if (jobOpportunities.isEmpty()) {
+            showMessage("No Job Opportunities found.");
+        } else {
+            StringBuilder sb = new StringBuilder("Job Opportunities:\n");
+            for (JobOpportunity job : jobOpportunities) {
+                sb.append(job).append("\n");
+            }
+            showMessage(sb.toString());
+        }
+    }
+
+    // Search and Analytics Module
+    private void searchAndAnalytics() {
+        String profession = prompt("Enter Profession to Search:");
+        boolean found = false;
+        StringBuilder result = new StringBuilder("Search Results:\n");
+        for (Alumni alumni : alumniList) {
+            if (alumni.getProfession().equalsIgnoreCase(profession)) {
+                result.append(alumni).append("\n");
+                found = true;
+            }
+        }
+        if (!found) {
+            result.append("No alumni found for the given profession.");
+        }
+        showMessage(result.toString());
+    }
+
+    // Helper methods
+    private String prompt(String message) {
+        return JOptionPane.showInputDialog(this, message);
+    }
+
+    private void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+    // Inner classes for entities
+    private class Alumni {
+        private String name;
+        private int graduationYear;
+        private String contactNumber;
+        private String profession;
+
+        public Alumni(String name, int graduationYear, String contactNumber, String profession) {
+            this.name = name;
+            this.graduationYear = graduationYear;
+            this.contactNumber = contactNumber;
+            this.profession = profession;
+        }
+
+        public String getProfession() {
+            return profession;
+        }
+
+        @Override
+        public String toString() {
+            return "Name: " + name + ", Year: " + graduationYear + ", Contact: " + contactNumber + ", Profession: " + profession;
+        }
+    }
+
+    private class Event {
+        private String eventName;
+        private String date;
+        private String description;
+
+        public Event(String eventName, String date, String description) {
+            this.eventName = eventName;
+            this.date = date;
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return "Event: " + eventName + ", Date: " + date + ", Description: " + description;
+        }
+    }
+
+    private class JobOpportunity {
+        private String title;
+        private String company;
+        private String location;
+        private String description;
+
+        public JobOpportunity(String title, String company, String location, String description) {
+            this.title = title;
+            this.company = company;
+            this.location = location;
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return "Job Title: " + title + ", Company: " + company + ", Location: " + location + ", Description: " + description;
+        }
+    }
+
+    public static void main(String[] args) {
+        new AlumniManagementSystem();
+    }
+}
